@@ -31,6 +31,18 @@ public final class ConfigManager {
         load(level.toLowerCase() + ".properties");
     }
 
+    /**
+     * Helper to load properties from an arbitrary InputStream. Useful for unit tests.
+     */
+    public void loadFromStream(java.io.InputStream in) {
+        try (java.io.BufferedReader reader = new java.io.BufferedReader(new java.io.InputStreamReader(in))) {
+            properties.clear();
+            properties.load(reader);
+        } catch (java.io.IOException exception) {
+            throw new IllegalStateException("Failed to load configuration from stream", exception);
+        }
+    }
+
     public String getString(String key) {
         String value = properties.getProperty(key);
         if (value == null) {
