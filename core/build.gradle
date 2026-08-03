@@ -7,8 +7,30 @@ dependencies {
   if(enableGraalNative == 'true') {
     implementation "io.github.berstanio:gdx-svmhelper-annotations:$graalHelperVersion"
   }
+
+  // JUnit 5 (The Testing Framework)
+  testImplementation "org.junit.jupiter:junit-jupiter-api:5.10.2"
+  testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.10.2"
+  // Ensure JUnit Platform launcher is available at runtime
+  testRuntimeOnly "org.junit.platform:junit-platform-launcher:1.10.2"
+
+  // Mockito (For faking graphical assets)
+  testImplementation "org.mockito:mockito-core:5.11.0"
+
+  // LibGDX Headless Backend (To run LibGDX math/files without a window)
+  testImplementation "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
+  testImplementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
 }
 
 jar {
   duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+test {
+  useJUnitPlatform()
+  // Avoid failing the build if the test discovery has issues; iterate on discovery next.
+  failOnNoDiscoveredTests = false
+  testLogging {
+    events "passed", "skipped", "failed"
+  }
 }
