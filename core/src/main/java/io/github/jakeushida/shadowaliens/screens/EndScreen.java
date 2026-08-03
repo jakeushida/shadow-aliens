@@ -1,6 +1,17 @@
 package io.github.jakeushida.shadowaliens.screens;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.GL20;
+import io.github.jakeushida.shadowaliens.Main;
+
 public class EndScreen implements Screen {
+    private final Main game;
+
+    public EndScreen(Main game) {
+        this.game = game;
+    }
+
     @Override
     public void show() {
         // End screen setup can be added when game-over UX is implemented.
@@ -8,11 +19,33 @@ public class EndScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        // End screen rendering and restart/quit handling are introduced in gameplay pass.
+        Gdx.gl.glClearColor(0.05f, 0.05f, 0.05f, 1f);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        if (game.batch != null) {
+            game.batch.begin();
+            // TODO: draw game over text and options
+            game.batch.end();
+        }
+    }
+
+    @Override
+    public void resize(int width, int height) {
+    }
+
+    @Override
+    public void pause() {
+    }
+
+    @Override
+    public void resume() {
     }
 
     @Override
     public void hide() {
-        // No resources to release in base implementation.
+    }
+
+    @Override
+    public void dispose() {
     }
 }

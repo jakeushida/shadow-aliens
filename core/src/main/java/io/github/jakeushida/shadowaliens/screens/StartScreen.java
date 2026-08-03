@@ -1,9 +1,19 @@
 package io.github.jakeushida.shadowaliens.screens;
 
+import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.GL20;
+import io.github.jakeushida.shadowaliens.Main;
 import io.github.jakeushida.shadowaliens.managers.ConfigManager;
 import io.github.jakeushida.shadowaliens.managers.GameSession;
 
 public class StartScreen implements Screen {
+    private final Main game;
+
+    public StartScreen(Main game) {
+        this.game = game;
+    }
+
     @Override
     public void show() {
         GameSession.getInstance().reset();
@@ -12,11 +22,35 @@ public class StartScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        // Intro/start menu rendering and input handling are introduced in gameplay pass.
+        // Clear background
+        Gdx.gl.glClearColor(0.15f, 0.15f, 0.2f, 1f);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        // Example: draw a placeholder using the shared batch
+        if (game.batch != null) {
+            game.batch.begin();
+            // TODO: draw title/menus using fonts and assets
+            game.batch.end();
+        }
+    }
+
+    @Override
+    public void resize(int width, int height) {
+    }
+
+    @Override
+    public void pause() {
+    }
+
+    @Override
+    public void resume() {
     }
 
     @Override
     public void hide() {
-        // No resources to release in base implementation.
+    }
+
+    @Override
+    public void dispose() {
     }
 }
