@@ -19,12 +19,36 @@ public final class ConfigManager {
     }
 
     public void load(String filepath) {
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(Gdx.files.internal(filepath).read()))) {
-            properties.clear();
-            properties.load(reader);
-        } catch (IOException exception) {
-            throw new IllegalStateException("Failed to load configuration file: " + filepath, exception);
+        // Primary attempt: use libGDX file handle (works in runtime)
+        try {
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(Gdx.files.internal(filepath).read()))) {
+                properties.clear();
+                properties.load(reader);
+                return;
+            }
+        } catch (RuntimeException | IOException ignored) {
+            // Fall through to the fallback below
         }
+
+        // Fallback for unit tests and environments where Gdx.files isn't configured to point to
+        // the project assets directory: attempt to locate an "assets" folder upwards from the
+        // current working directory and read <assets>/<filepath>.
+        java.io.File dir = new java.io.File(System.getProperty("user.dir"));
+        while (dir != null) {
+            java.io.File candidate = new java.io.File(dir, "assets" + java.io.File.separator + filepath);
+            if (candidate.exists() && candidate.isFile()) {
+                try (BufferedReader reader = new BufferedReader(new java.io.FileReader(candidate))) {
+                    properties.clear();
+                    properties.load(reader);
+                    return;
+                } catch (IOException exception) {
+                    throw new IllegalStateException("Failed to load configuration file from fallback: " + candidate.getPath(), exception);
+                }
+            }
+            dir = dir.getParentFile();
+        }
+
+        throw new IllegalStateException("Failed to load configuration file: " + filepath + " (looked in libGDX internal and project assets folders)");
     }
 
     public void loadDifficulty(String level) {
@@ -41,6 +65,13 @@ public final class ConfigManager {
         } catch (java.io.IOException exception) {
             throw new IllegalStateException("Failed to load configuration from stream", exception);
         }
+    }
+
+    /**
+     * Clears all currently loaded properties. Useful for unit tests to isolate state.
+     */
+    public void reset() {
+        properties.clear();
     }
 
     public String getString(String key) {
