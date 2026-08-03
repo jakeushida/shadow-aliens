@@ -1,32 +1,36 @@
 package io.github.jakeushida.shadowaliens;
 
-import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.utils.ScreenUtils;
+import io.github.jakeushida.shadowaliens.screens.StartScreen;
 
-/** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
-public class Main extends ApplicationAdapter {
-    private SpriteBatch batch;
-    private Texture image;
+/** Main game entry that shares a SpriteBatch with screens. */
+public class Main extends Game {
+    // Shared SpriteBatch for all screens to use
+    public SpriteBatch batch;
 
     @Override
     public void create() {
         batch = new SpriteBatch();
-        image = new Texture("libgdx.png");
+
+        // Initialize configuration here if needed
+
+        // Launch the initial Start Screen
+        this.setScreen(new StartScreen(this));
     }
 
     @Override
     public void render() {
-        ScreenUtils.clear(0.15f, 0.15f, 0.2f, 1f);
-        batch.begin();
-        batch.draw(image, 140, 210);
-        batch.end();
+        // Delegate rendering to the active screen
+        super.render();
     }
 
     @Override
     public void dispose() {
-        batch.dispose();
-        image.dispose();
+        if (batch != null) {
+            batch.dispose();
+            batch = null;
+        }
+        super.dispose();
     }
 }
