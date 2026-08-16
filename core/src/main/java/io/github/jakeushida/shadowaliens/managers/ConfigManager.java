@@ -19,10 +19,16 @@ public final class ConfigManager {
     }
 
     public void load(String filepath) {
+        load(filepath, true);
+    }
+
+    private void load(String filepath, boolean clearExisting) {
         // Primary attempt: use libGDX file handle (works in runtime)
         try {
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(Gdx.files.internal(filepath).read()))) {
-                properties.clear();
+                if (clearExisting) {
+                    properties.clear();
+                }
                 properties.load(reader);
                 return;
             }
@@ -38,7 +44,9 @@ public final class ConfigManager {
             java.io.File candidate = new java.io.File(dir, "assets" + java.io.File.separator + filepath);
             if (candidate.exists() && candidate.isFile()) {
                 try (BufferedReader reader = new BufferedReader(new java.io.FileReader(candidate))) {
-                    properties.clear();
+                    if (clearExisting) {
+                        properties.clear();
+                    }
                     properties.load(reader);
                     return;
                 } catch (IOException exception) {
@@ -51,8 +59,17 @@ public final class ConfigManager {
         throw new IllegalStateException("Failed to load configuration file: " + filepath + " (looked in libGDX internal and project assets folders)");
     }
 
+    /**
+     * Reloads the global defaults and layers the chosen difficulty on top.
+     *
+     * <p>The global file is reloaded first so that switching difficulty cannot
+     * leave stale keys behind. Previously only the difficulty file was layered
+     * on, so going from hard to easy kept hard's extra wave rows (for example
+     * {@code wave.3.enemy.3.*}) and spawned enemies the easy wave never defined.
+     */
     public void loadDifficulty(String level) {
-        load(level.toLowerCase() + ".properties");
+        load("global.properties", true);
+        load(level.toLowerCase() + ".properties", false);
     }
 
     /**
@@ -83,6 +100,21 @@ public final class ConfigManager {
     }
 
     public int getInt(String key) {
-        return Integer.parseInt(getString(key));
+        // Handle both integer and float formats (e.g., "400" or "400.0")
+        return (int) getFloat(key);
+    }
+
+    public float getFloat(String key) {
+        return Float.parseFloat(getString(key).trim());
+    }
+
+    /** True when {@code key} is present, so callers can probe optional keys without catching. */
+    public boolean has(String key) {
+        return properties.getProperty(key) != null;
+    }
+
+    /** Returns {@code key} as an int, or {@code fallback} when the key is absent. */
+    public int getInt(String key, int fallback) {
+        return has(key) ? getInt(key) : fallback;
     }
 }

@@ -10,8 +10,9 @@ import io.github.jakeushida.shadowaliens.powerups.PowerupEffect;
 import io.github.jakeushida.shadowaliens.rendering.RenderLayer;
 
 public class PlayerShip extends GameEntity implements Collidable, Movable, Shooter {
-    private static final float DEFAULT_WIDTH = 48f;
-    private static final float DEFAULT_HEIGHT = 32f;
+    /** Matches the {@code playerSpaceship} region in sprites.atlas. */
+    public static final float DEFAULT_WIDTH = 56f;
+    public static final float DEFAULT_HEIGHT = 84f;
 
     private final Rectangle boundingBox;
     private int lives;
@@ -23,7 +24,7 @@ public class PlayerShip extends GameEntity implements Collidable, Movable, Shoot
     private boolean shielded;
 
     public PlayerShip(float x, float y) {
-        super(x, y, RenderLayer.SHIPS);
+        super(x, y, RenderLayer.SHIPS, DEFAULT_WIDTH, DEFAULT_HEIGHT);
         this.lives = 3;
         this.boundingBox = new Rectangle(x, y, DEFAULT_WIDTH, DEFAULT_HEIGHT);
         this.shotCooldownMultiplier = 1f;

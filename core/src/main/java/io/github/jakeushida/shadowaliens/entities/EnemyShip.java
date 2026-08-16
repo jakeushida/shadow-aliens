@@ -6,8 +6,9 @@ import io.github.jakeushida.shadowaliens.contracts.Movable;
 import io.github.jakeushida.shadowaliens.rendering.RenderLayer;
 
 public abstract class EnemyShip extends GameEntity implements Collidable, Movable {
-    private static final float DEFAULT_WIDTH = 40f;
-    private static final float DEFAULT_HEIGHT = 28f;
+    /** Size of the plain {@code regularEnemy} region in sprites.atlas. */
+    public static final float DEFAULT_WIDTH = 56f;
+    public static final float DEFAULT_HEIGHT = 56f;
 
     protected final Rectangle boundingBox;
     protected int arrivalTime;
@@ -15,9 +16,13 @@ public abstract class EnemyShip extends GameEntity implements Collidable, Movabl
     protected float speedY;
 
     protected EnemyShip(float x, float y, int arrivalTime) {
-        super(x, y, RenderLayer.SHIPS);
+        this(x, y, arrivalTime, DEFAULT_WIDTH, DEFAULT_HEIGHT);
+    }
+
+    protected EnemyShip(float x, float y, int arrivalTime, float width, float height) {
+        super(x, y, RenderLayer.SHIPS, width, height);
         this.arrivalTime = arrivalTime;
-        this.boundingBox = new Rectangle(x, y, DEFAULT_WIDTH, DEFAULT_HEIGHT);
+        this.boundingBox = new Rectangle(x, y, width, height);
     }
 
     public int getArrivalTime() {

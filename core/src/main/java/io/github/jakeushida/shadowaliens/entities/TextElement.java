@@ -9,6 +9,8 @@ public class TextElement extends GameEntity {
     private String text;
     private final BitmapFont font;
     private Color color;
+    /** Reused so drawing does not allocate a Color every frame. */
+    private final Color previousColor = new Color();
 
     public TextElement(float x, float y, String text, BitmapFont font, Color color) {
         super(x, y, RenderLayer.UI);
@@ -32,9 +34,12 @@ public class TextElement extends GameEntity {
 
     @Override
     public void draw(SpriteBatch batch) {
-        Color previous = new Color(font.getColor());
+        if (font == null) {
+            return;
+        }
+        previousColor.set(font.getColor());
         font.setColor(color);
         font.draw(batch, text, x, y);
-        font.setColor(previous);
+        font.setColor(previousColor);
     }
 }

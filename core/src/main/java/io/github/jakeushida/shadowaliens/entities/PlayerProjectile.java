@@ -3,8 +3,12 @@ package io.github.jakeushida.shadowaliens.entities;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class PlayerProjectile extends Projectile {
+    /** Matches the {@code playerProjectile} region in sprites.atlas. */
+    public static final float WIDTH = 17f;
+    public static final float HEIGHT = 42f;
+
     public PlayerProjectile(float x, float y) {
-        super(x, y);
+        super(x, y, WIDTH, HEIGHT);
         setSpeedY(250f);
     }
 
