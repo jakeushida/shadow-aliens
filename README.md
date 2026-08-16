@@ -1,7 +1,7 @@
 # Shadow Aliens
 
 A retro top-down space shooter built with [libGDX](https://libgdx.com/). You pilot a
-ship along the bottom of the screen and clear three waves of descending aliens: regular
+ship along the bottom of the screen and clear five waves of descending aliens: regular
 ones dive straight down, strafing ones weave as they fall, and shooting ones fire back.
 Powerups grant a shield, an extra life, a faster gun or a faster engine, one at a time.
 Waves, enemy arrival times, scoring and difficulty all come from `.properties` files in
