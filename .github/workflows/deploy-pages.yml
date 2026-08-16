@@ -37,7 +37,12 @@ jobs:
       - name: Build the web target
         run: ./gradlew teavm:buildRelease -Dorg.gradle.logging.level=lifecycle
 
+      # enablement: true turns Pages on via the API if it is not already
+      # enabled, so this does not depend on the repo setting being flipped by
+      # hand first. Without it this step 404s on a repo that has never had Pages.
       - uses: actions/configure-pages@v5
+        with:
+          enablement: true
 
       - uses: actions/upload-pages-artifact@v3
         with:
