@@ -2,104 +2,66 @@ package io.github.jakeushida.shadowaliens.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import io.github.jakeushida.shadowaliens.Main;
 import io.github.jakeushida.shadowaliens.managers.ConfigManager;
 import io.github.jakeushida.shadowaliens.managers.GameSession;
+import io.github.jakeushida.shadowaliens.rendering.TextRenderer;
 
-public class PauseScreen implements Screen {
-    private final Main game;
+public class PauseScreen extends BaseScreen {
+    /** Opacity of the black wash drawn over the frozen battle. */
+    private static final float DIM_ALPHA = 0.72f;
+
     private final BattleScreen battleScreen;
-    private final GlyphLayout layout;
 
     public PauseScreen(Main game, BattleScreen battleScreen) {
-        this.game = game;
+        super(game);
         this.battleScreen = battleScreen;
-        this.layout = new GlyphLayout();
-    }
-
-    @Override
-    public void show() {
     }
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0f, 0f, 0f, 0.8f);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        // Handle input
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             game.setScreen(battleScreen);
             return;
         }
 
+        // Draw the battle frozen underneath, then wash it out. The old code
+        // passed an alpha to glClearColor, which the default framebuffer ignores,
+        // so the intended overlay was really just an opaque black screen.
+        battleScreen.renderWorld();
+
+        ConfigManager config = ConfigManager.getInstance();
+        float width = worldWidth();
+
         game.batch.begin();
 
-        // Draw title
-        String titleText = ConfigManager.getInstance().getString("pausedTitle.text");
-        float titleSize = ConfigManager.getInstance().getInt("pausedTitle.size");
-        float titleY = ConfigManager.getInstance().getInt("pausedTitle.posY");
+        game.batch.setColor(0f, 0f, 0f, DIM_ALPHA);
+        game.batch.draw(game.blankTexture, 0f, 0f, width, worldHeight());
+        game.batch.setColor(Color.WHITE);
 
-        BitmapFont titleFont = game.font;
-        titleFont.getData().setScale(titleSize / 24f);
-        layout.setText(titleFont, titleText);
-        float titleX = (Gdx.graphics.getWidth() - layout.width) / 2;
-        titleFont.setColor(Color.YELLOW);
-        titleFont.draw(game.batch, titleText, titleX, titleY);
+        text.setSize(game.font, config.getInt("pausedTitle.size"));
+        text.drawCentred(game.batch, game.font, config.getString("pausedTitle.text"),
+            width, config.getInt("pausedTitle.posY"), Color.YELLOW);
 
-        // Draw controls list
-        String controlsText = ConfigManager.getInstance().getString("controlsList.text");
-        float controlsY = ConfigManager.getInstance().getInt("controlsList.startPosY");
+        text.setSize(game.font, TextRenderer.BODY_SIZE);
+        text.drawCentredRows(game.batch, game.font,
+            config.getString("controlsList.text"),
+            width,
+            config.getInt("controlsList.startPosY"),
+            config.getInt("controlsList.rowGap"),
+            Color.WHITE);
 
-        BitmapFont controlsFont = game.font;
-        controlsFont.getData().setScale(0.8f);
-        layout.setText(controlsFont, controlsText);
-        float controlsX = (Gdx.graphics.getWidth() - layout.width) / 2;
-        controlsFont.setColor(Color.WHITE);
-        controlsFont.draw(game.batch, controlsText, controlsX, controlsY);
+        String[] timescalePos = config.getString("timescale.pos").split(",");
+        text.draw(game.batch, game.font,
+            config.getString("timescale.text") + " "
+                + String.format("%.1f", GameSession.getInstance().getTimeScale()),
+            Float.parseFloat(timescalePos[0].trim()),
+            Float.parseFloat(timescalePos[1].trim()),
+            Color.LIGHT_GRAY);
 
-        // Draw timescale info
-        String timescaleText = ConfigManager.getInstance().getString("timescale.text");
-        String[] timescalePos = ConfigManager.getInstance().getString("timescale.pos").split(",");
-        float timescaleX = Float.parseFloat(timescalePos[0].trim());
-        float timescaleY = Float.parseFloat(timescalePos[1].trim());
-
-        controlsFont.getData().setScale(1f);
-        controlsFont.setColor(Color.LIGHT_GRAY);
-        float currentTimescale = GameSession.getInstance().getTimeScale();
-        controlsFont.draw(game.batch, timescaleText + " " + String.format("%.1f", currentTimescale), timescaleX, timescaleY);
-
-        // Draw resume instruction
-        controlsFont.setColor(Color.CYAN);
-        String resumeText = "PRESS ESC TO RESUME";
-        layout.setText(controlsFont, resumeText);
-        float resumeX = (Gdx.graphics.getWidth() - layout.width) / 2;
-        controlsFont.draw(game.batch, resumeText, resumeX, 150);
+        text.drawCentred(game.batch, game.font, "PRESS ESC TO RESUME", width, 60f, Color.CYAN);
 
         game.batch.end();
-    }
-
-    @Override
-    public void resize(int width, int height) {
-    }
-
-    @Override
-    public void pause() {
-    }
-
-    @Override
-    public void resume() {
-    }
-
-    @Override
-    public void hide() {
-    }
-
-    @Override
-    public void dispose() {
     }
 }

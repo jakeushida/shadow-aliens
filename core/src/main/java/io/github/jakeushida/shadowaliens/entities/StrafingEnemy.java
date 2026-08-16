@@ -6,8 +6,12 @@ import com.badlogic.gdx.math.MathUtils;
 public class StrafingEnemy extends EnemyShip {
     private float elapsed;
 
+    /** Matches the wide {@code strafingEnemy} region in sprites.atlas. */
+    public static final float WIDTH = 111f;
+    public static final float HEIGHT = 56f;
+
     public StrafingEnemy(float x, float y, int arrivalTime) {
-        super(x, y, arrivalTime);
+        super(x, y, arrivalTime, WIDTH, HEIGHT);
         setSpeedY(-60f);
         setSpeedX(50f);
     }

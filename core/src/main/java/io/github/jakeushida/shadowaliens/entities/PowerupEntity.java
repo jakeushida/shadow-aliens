@@ -13,10 +13,14 @@ public class PowerupEntity extends GameEntity implements Collidable, Movable {
     private float speedX;
     private float speedY;
 
+    /** Matches the powerup regions in sprites.atlas, which are all around 28x28. */
+    public static final float WIDTH = 28f;
+    public static final float HEIGHT = 28f;
+
     public PowerupEntity(float x, float y, PowerupEffect effect) {
-        super(x, y, RenderLayer.PROJECTILES);
+        super(x, y, RenderLayer.PROJECTILES, WIDTH, HEIGHT);
         this.effect = effect;
-        this.boundingBox = new Rectangle(x, y, 20f, 20f);
+        this.boundingBox = new Rectangle(x, y, WIDTH, HEIGHT);
         this.speedY = -40f;
     }
 
@@ -43,7 +47,9 @@ public class PowerupEntity extends GameEntity implements Collidable, Movable {
     @Override
     public void onCollision(Collidable other) {
         if (other instanceof PlayerShip) {
-            effect.apply((PlayerShip) other);
+            // setBuff, not effect.apply: applying directly bypassed PlayerShip's
+            // currentBuff so old buffs were never removed and stacked forever.
+            ((PlayerShip) other).setBuff(effect);
         }
     }
 

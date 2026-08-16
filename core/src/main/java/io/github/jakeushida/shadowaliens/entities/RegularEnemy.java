@@ -3,8 +3,12 @@ package io.github.jakeushida.shadowaliens.entities;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class RegularEnemy extends EnemyShip {
+    /** Matches the {@code regularEnemy} region in sprites.atlas. */
+    public static final float WIDTH = 56f;
+    public static final float HEIGHT = 56f;
+
     public RegularEnemy(float x, float y, int arrivalTime) {
-        super(x, y, arrivalTime);
+        super(x, y, arrivalTime, WIDTH, HEIGHT);
         setSpeedY(-80f);
     }
 

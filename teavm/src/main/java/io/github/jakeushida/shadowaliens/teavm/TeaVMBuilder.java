@@ -19,6 +19,16 @@ public class TeaVMBuilder {
             if ("debug".equals(arg)) debug = true;
             else if ("run".equals(arg)) startJetty = true;
         }
+        // Everything under assets/ is downloaded by every player before the game
+        // starts, so keep macOS Finder metadata and the unused libGDX template
+        // logo out of the bundle.
+        AssetFileHandle assets = new AssetFileHandle("../assets");
+        assets.filter = file -> {
+            String name = file.replace('\\', '/');
+            name = name.substring(name.lastIndexOf('/') + 1);
+            return !name.equals(".DS_Store") && !name.equals("libgdx.png");
+        };
+
         new TeaCompiler(
             new WebBackend()
                 .setHtmlWidth(800) /* Change this to fit your game's requirements. */
@@ -28,8 +38,8 @@ public class TeaVMBuilder {
                 .setStartJettyAfterBuild(startJetty)
                 .setJettyPort(8080)
         )
-            .addAssets(new AssetFileHandle("../assets"))
-            
+            .addAssets(assets)
+
             .setOptimizationLevel(debug ? TeaVMOptimizationLevel.SIMPLE : TeaVMOptimizationLevel.ADVANCED)
             .setMainClass(TeaVMLauncher.class.getName())
             .setObfuscated(!debug)

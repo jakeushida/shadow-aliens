@@ -10,9 +10,9 @@ public abstract class Projectile extends GameEntity implements Collidable, Movab
     protected float speedX;
     protected float speedY;
 
-    protected Projectile(float x, float y) {
-        super(x, y, RenderLayer.PROJECTILES);
-        this.boundingBox = new Rectangle(x, y, 10f, 18f);
+    protected Projectile(float x, float y, float width, float height) {
+        super(x, y, RenderLayer.PROJECTILES, width, height);
+        this.boundingBox = new Rectangle(x, y, width, height);
     }
 
     @Override
