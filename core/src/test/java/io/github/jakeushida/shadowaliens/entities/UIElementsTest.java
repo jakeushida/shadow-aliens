@@ -1,6 +1,5 @@
 package io.github.jakeushida.shadowaliens.entities;
 
-import com.badlogic.gdx.graphics.Color;
 import io.github.jakeushida.shadowaliens.managers.GameSession;
 import io.github.jakeushida.shadowaliens.rendering.RenderLayer;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,47 +12,6 @@ public class UIElementsTest {
     @BeforeEach
     public void setUp() {
         GameSession.getInstance().reset();
-    }
-
-    @Test
-    public void testTextElementInitialization() {
-        // Use null font since Gdx isn't initialized in unit tests
-        TextElement text = new TextElement(100f, 200f, "Hello", null, Color.WHITE);
-
-        assertEquals(100f, text.getX());
-        assertEquals(200f, text.getY());
-        assertEquals(RenderLayer.UI, text.getLayer());
-    }
-
-    @Test
-    public void testTextElementSetText() {
-        TextElement text = new TextElement(100f, 200f, "Initial", null, Color.WHITE);
-
-        text.setText("Updated");
-        // No direct getter, but method should not throw
-        assertDoesNotThrow(() -> text.setText("Another Update"));
-    }
-
-    @Test
-    public void testTextElementSetColor() {
-        TextElement text = new TextElement(100f, 200f, "Test", null, Color.WHITE);
-
-        assertDoesNotThrow(() -> text.setColor(Color.RED));
-        assertDoesNotThrow(() -> text.setColor(Color.BLUE));
-    }
-
-    @Test
-    public void testTextElementUpdate() {
-        TextElement text = new TextElement(100f, 200f, "Test", null, Color.WHITE);
-
-        // Update should not throw and should not change position (static UI)
-        float beforeX = text.getX();
-        float beforeY = text.getY();
-
-        text.update(1.0f);
-
-        assertEquals(beforeX, text.getX());
-        assertEquals(beforeY, text.getY());
     }
 
     @Test
@@ -159,28 +117,6 @@ public class UIElementsTest {
     }
 
     @Test
-    public void testTextElementWithNullFont() {
-        // Should be able to create with null font (may crash on draw, but not on creation)
-        assertDoesNotThrow(() -> new TextElement(0f, 0f, "Test", null, Color.WHITE));
-    }
-
-    @Test
-    public void testTextElementWithEmptyString() {
-        TextElement text = new TextElement(100f, 200f, "", null, Color.WHITE);
-
-        assertDoesNotThrow(() -> text.update(1.0f));
-    }
-
-    @Test
-    public void testMultipleTextElements() {
-        TextElement text1 = new TextElement(100f, 200f, "First", null, Color.WHITE);
-        TextElement text2 = new TextElement(150f, 250f, "Second", null, Color.RED);
-
-        assertEquals(100f, text1.getX());
-        assertEquals(150f, text2.getX());
-    }
-
-    @Test
     public void testMultipleExplosions() {
         Explosion exp1 = new Explosion(100f, 200f, 2);
         Explosion exp2 = new Explosion(150f, 250f, 3);
@@ -194,11 +130,9 @@ public class UIElementsTest {
 
     @Test
     public void testUIElementsHaveCorrectLayer() {
-        TextElement text = new TextElement(100f, 200f, "Test", null, Color.WHITE);
         Explosion explosion = new Explosion(100f, 200f, 5);
         LivesDisplay lives = new LivesDisplay(10f, 20f, null, 5f);
 
-        assertEquals(RenderLayer.UI, text.getLayer());
         assertEquals(RenderLayer.UI, explosion.getLayer());
         assertEquals(RenderLayer.UI, lives.getLayer());
     }

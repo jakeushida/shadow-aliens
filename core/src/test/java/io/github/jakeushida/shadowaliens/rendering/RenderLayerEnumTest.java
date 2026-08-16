@@ -83,11 +83,9 @@ public class RenderLayerEnumTest {
 
     @Test
     public void testUIElementsUseUILayer() {
-        TextElement text = new TextElement(100f, 100f, "Test", null, null);
         Explosion explosion = new Explosion(100f, 100f, 60);
         LivesDisplay lives = new LivesDisplay(100f, 100f, null, 5f);
 
-        assertEquals(RenderLayer.UI, text.getLayer());
         assertEquals(RenderLayer.UI, explosion.getLayer());
         assertEquals(RenderLayer.UI, lives.getLayer());
     }
@@ -132,7 +130,6 @@ public class RenderLayerEnumTest {
             new EnemyProjectile(0f, 0f),
             new PowerupEntity(0f, 0f, null),
             new Explosion(0f, 0f, 1),
-            new TextElement(0f, 0f, "", null, null),
             new LivesDisplay(0f, 0f, null, 0f)
         };
 
