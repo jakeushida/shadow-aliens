@@ -25,6 +25,10 @@ public class PauseScreen extends BaseScreen {
             game.setScreen(battleScreen);
             return;
         }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
+            game.setScreen(new StartScreen(game));
+            return;
+        }
 
         // Draw the battle frozen underneath, then wash it out. The old code
         // passed an alpha to glClearColor, which the default framebuffer ignores,

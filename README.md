@@ -17,6 +17,7 @@ Waves, enemy arrival times, scoring and difficulty all come from `.properties` f
 | `A` / `D` | Move left and right |
 | `SPACE` | Shoot (and restart from the end screen) |
 | `ESC` | Pause and resume |
+| `R` | Quit to the title screen |
 | `I` | Debug: toggle invincibility |
 | `G` / `F` | Debug: speed time up and down |
 

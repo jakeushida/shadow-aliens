@@ -21,7 +21,8 @@ public class EndScreen extends BaseScreen {
     public void render(float delta) {
         beginFrame();
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+        // R matches the "back to title" key used in battle and on the pause screen.
+        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE) || Gdx.input.isKeyJustPressed(Input.Keys.R)) {
             game.setScreen(new StartScreen(game));
             return;
         }

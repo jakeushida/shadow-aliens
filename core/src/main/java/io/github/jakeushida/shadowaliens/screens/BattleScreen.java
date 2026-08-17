@@ -165,6 +165,10 @@ public class BattleScreen extends BaseScreen {
             session.setTimeScale(Math.max(0.1f, session.getTimeScale() - delta));
         }
 
+        if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
+            game.setScreen(new StartScreen(game));
+            return true;
+        }
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             game.setScreen(new PauseScreen(game, this));
             return true;
